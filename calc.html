@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Ajax Calculator</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#equal').click(function() {
+                var number = $('#display').html();
+                var old = $('#display').html();
+                $.ajax({
+                    url: 'calc.php',
+                    type: "POST",
+                    data: {
+                        'action': 'equal',
+                        'number': number,
+                        'old': old
+                    },
+                    success: function(message) {
+                        $('#display').html(message);
+                    }
+                }).error(function() {
+                    $('#display').html('Can not be calculated');
+                });
+            });
+            $('input[type=button]').click(function() {
+                var number = $(this).val();
+                var old = $('#display').html();
+                if (number === 'C') {
+                    $('#display').html('');
+                    return;
+                }
+                if (number === '=') {
+                    $('#display').html(old);
+                    return;
+                }
+                $.ajax({
+                    url: 'calc.php',
+                    type: "POST",
+                    data: {
+                        'action': 'operation',
+                        'number': number,
+                        'old': old
+                    },
+                    success: function(message) {
+                        $('#display').html(message);
+                    }
+                }).error(function() {
+                    $('#display').html('Can not be calculated');
+                });
+            });
+        });
+    </script>
+</head>
+
+<body class="text-bold">
+    <div class="col-md-4">
+        <h2 class="text-center">Calculator</h2>
+        <table class="table table-responsive table-bordered">
+            <tr>
+                <td colspan="5"><textarea id="display" class="form-control bg-warning text-right"></textarea></td>
+            </tr>
+            <tr>
+                <td><input value="7" type="button" class="btn btn-lg btn-block"></td>
+                <td><input value="8" type="button" class="btn btn-lg btn-block"></td>
+                <td><input value="9" type="button" class="btn btn-lg btn-block"></td>
+                <td><input id="add" value="+" type="button" class="btn btn-lg btn-block"></td>
+            </tr>
+            <tr>
+                <td><input value="4" type="button" class="btn btn-lg btn-block"></td>
+                <td><input value="5" type="button" class="btn btn-lg btn-block"></td>
+                <td><input value="6" type="button" class="btn btn-lg btn-block"></td>
+                <td><input id="substract" value="-" type="button" class="btn btn-lg btn-block"></td>
+            </tr>
+            <tr>
+                <td><input value="1" type="button" class="btn btn-lg btn-block"></td>
+                <td><input value="2" type="button" class="btn btn-lg btn-block"></td>
+                <td><input value="3" type="button" class="btn btn-lg btn-block"></td>
+                <td><input id="multiply" value="*" type="button" class="btn btn-lg btn-block"></td>
+            </tr>
+            <tr>
+                <td><input value="0" type="button" class="btn btn-lg btn-block"></td>
+                <td><input id="dot" value="." type="button" class="btn btn-lg btn-block"></td>
+                <td><input id="div" value="/" type="button" class="btn btn-lg btn-block"></td>
+                <td><input id="clearScreen" value="C" type="button" class="btn btn-lg btn-block btn-danger"></td>
+            </tr>
+            <tr>
+                <td colspan="5"><input id="equal" value="=" type="button" class="btn btn-large btn-block btn-success">
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>
